@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: yearendparty2025
+    build: .
+    ports:
+      - "8097:8000"
+    volumes:
+      - .:/app  # Ánh xạ thư mục code vào trong Docker để sửa là ăn ngay
+    environment:
+      - WATCHFILES_FORCE_POLLING=true # Bắt buộc reload trên Windows
+    dns:
+      - 8.8.8.8   # Dùng DNS Google để tránh lỗi mạng Docker
+      - 8.8.4.4
+    restart: always

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bảng Vàng Tết 🌼</title>
+    <style>
+        body { background: radial-gradient(circle, #b71c1c 0%, #5d0000 100%); color: #ffd700; font-family: 'Verdana', sans-serif; text-align: center; margin: 0; padding: 20px; }
+        h1 { font-size: 3em; text-transform: uppercase; text-shadow: 2px 2px 4px #000; margin-bottom: 10px; }
+        .sub-title { color: #fff; margin-bottom: 30px; font-style: italic; }
+        
+        .board { max-width: 800px; margin: 0 auto; background: rgba(0, 0, 0, 0.5); border-radius: 15px; padding: 20px; border: 2px solid #ffd700; }
+        
+        /* Thêm cursor pointer để người dùng biết là bấm được */
+        .rank-item { display: flex; align-items: center; justify-content: space-between; background: #fff; color: #333; margin: 10px 0; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s; cursor: pointer; }
+        .rank-item:hover { transform: scale(1.02); background-color: #fffde7; }
+        
+        .rank-number { font-size: 24px; font-weight: bold; width: 40px; }
+        .singer-name { flex-grow: 1; text-align: left; font-size: 20px; font-weight: bold; padding-left: 20px; }
+        .score-box { text-align: right; }
+        .avg-score { font-size: 22px; color: #d50000; font-weight: bold; }
+        .vote-count { font-size: 12px; color: #666; }
+
+        .rank-1 { background: linear-gradient(90deg, #fff9c4, #ffd700); border: 2px solid #fff; }
+        .rank-2 { background: linear-gradient(90deg, #e0e0e0, #bdbdbd); }
+        .rank-3 { background: linear-gradient(90deg, #ffccbc, #ffab91); }
+
+        .loading { color: #fff; font-size: 14px; margin-top: 20px; }
+
+        /* --- CSS CHO MODAL (CỬA SỔ BẬT LÊN) --- */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+        .modal-content { background-color: #fff3e0; margin: 10% auto; padding: 20px; border: 4px solid #d50000; width: 80%; max-width: 500px; border-radius: 15px; position: relative; color: #333; }
+        .close-btn { color: #d50000; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover { color: black; }
+        .modal h2 { color: #d50000; border-bottom: 2px solid #ffb300; padding-bottom: 10px; }
+        
+        /* Bảng chi tiết bên trong modal */
+        .detail-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .detail-table th, .detail-table td { border: 1px solid #ffb300; padding: 8px; text-align: left; }
+        .detail-table th { background-color: #ffcc80; color: #d50000; }
+        .score-val { font-weight: bold; color: #d50000; }
+    </style>
+</head>
+<body>
+
+    <h1>🏆 Bảng Xếp Hạng 🏆</h1>
+    <div class="sub-title">Hội Thi Tiếng Hát Mừng Xuân 🌺</div>
+
+    <div class="board" id="boardContent">
+        </div>
+
+    <div class="loading">Dữ liệu cập nhật mỗi 3 giây... (Bấm vào thí sinh để xem chi tiết)</div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Chi tiết điểm</h2>
+            <div id="modalBody">Đang tải...</div>
+        </div>
+    </div>
+
+<script>
+    const API_URL = "/api"; // Đảm bảo đúng prefix API
+    let isModalOpen = false; // Để tránh refresh khi đang xem chi tiết
+
+    async function fetchLeaderboard() {
+        if (isModalOpen) return; // Nếu đang mở modal thì tạm dừng update bảng xếp hạng để tránh lag
+
+        try {
+            const res = await fetch(`${API_URL}/leaderboard`);
+            const data = await res.json();
+            renderBoard(data);
+        } catch (e) {
+            console.error("Lỗi kết nối:", e);
+        }
+    }
+
+    function renderBoard(data) {
+        const board = document.getElementById("boardContent");
+        board.innerHTML = ""; 
+
+        if (data.length === 0) {
+            board.innerHTML = "<p style='color:white'>Chưa có dữ liệu thí sinh nào...</p>";
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const rank = index + 1;
+            let specialClass = "";
+            if(rank === 1) specialClass = "rank-1";
+            else if(rank === 2) specialClass = "rank-2";
+            else if(rank === 3) specialClass = "rank-3";
+
+            // Thêm sự kiện onclick để xem chi tiết
+            const html = `
+                <div class="rank-item ${specialClass}" onclick="showDetails('${item.participant_id}', '${item.participant_name}')">
+                    <div class="rank-number">#${rank}</div>
+                    <div class="singer-name">
+                        ${rank === 1 ? '👑 ' : ''}${item.participant_name}
+                    </div>
+                    <div class="score-box">
+                        <div class="avg-score">${item.average_score} ⭐</div>
+                        <div class="vote-count">${item.vote_count} lượt chấm</div>
+                    </div>
+                </div>
+            `;
+            board.innerHTML += html;
+        });
+    }
+
+    // --- CÁC HÀM XỬ LÝ MODAL CHI TIẾT ---
+
+    async function showDetails(id, name) {
+        isModalOpen = true; // Dừng auto refresh
+        const modal = document.getElementById("detailModal");
+        const title = document.getElementById("modalTitle");
+        const body = document.getElementById("modalBody");
+
+        title.innerText = `Điểm số của: ${name}`;
+        body.innerHTML = "Đang tải dữ liệu...";
+        modal.style.display = "block";
+
+        try {
+            // Gọi API chi tiết mới thêm
+            const res = await fetch(`${API_URL}/participants/${id}/details`);
+            const details = await res.json();
+
+            if (details.length === 0) {
+                body.innerHTML = "<p>Chưa có ai chấm điểm cho thí sinh này.</p>";
+            } else {
+                let tableHtml = `
+                    <table class="detail-table">
+                        <thead><tr><th>Giám Khảo</th><th>Điểm</th></tr></thead>
+                        <tbody>
+                `;
+                details.forEach(d => {
+                    tableHtml += `
+                        <tr>
+                            <td>${d.judge_name}</td>
+                            <td class="score-val">${d.score}</td>
+                        </tr>`;
+                });
+                tableHtml += `</tbody></table>`;
+                body.innerHTML = tableHtml;
+            }
+        } catch (e) {
+            body.innerText = "Lỗi khi tải chi tiết!";
+            console.error(e);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById("detailModal").style.display = "none";
+        isModalOpen = false; // Tiếp tục auto refresh
+    }
+
+    // Đóng modal khi bấm ra ngoài vùng trắng
+    window.onclick = function(event) {
+        const modal = document.getElementById("detailModal");
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+
+    fetchLeaderboard();
+    setInterval(fetchLeaderboard, 3000);
+
+</script>
+</body>
+</html>

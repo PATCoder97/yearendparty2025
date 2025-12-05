@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chấm Điểm Tết 🧧</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #b71c1c; color: #fff; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 500px; margin: 0 auto; background: #fff3e0; color: #333; padding: 20px; border-radius: 15px; border: 4px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        h1 { color: #d50000; }
+        select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 2px solid #ffb300; font-size: 16px; box-sizing: border-box; }
+        button { background-color: #d50000; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #ffd700; color: #d50000; }
+        .hidden { display: none; }
+        .tet-deco { font-size: 40px; }
+        .judge-badge { background: #ffe0b2; padding: 5px 10px; border-radius: 5px; color: #e65100; font-weight: bold; display: inline-block; margin-bottom: 10px;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="tet-deco">🌸 🎤 🌸</div>
+    <h1>Phiếu Chấm Điểm</h1>
+
+    <div id="loginSection">
+        <p>Vui lòng nhập tên Giám Khảo để bắt đầu:</p>
+        <input type="text" id="judgeNameInput" placeholder="Tên của bạn (VD: Tài, Hùng...)">
+        <button onclick="saveJudge()">Bắt đầu Chấm 🧧</button>
+    </div>
+
+    <div id="voteSection" class="hidden">
+        <div>Xin chào: <span id="displayJudgeName" class="judge-badge"></span></div>
+        <button onclick="logout()" style="width: auto; padding: 5px 10px; font-size: 12px; background:#555;">Đổi tên</button>
+        <hr style="border-color: #ffb300;">
+        
+        <label><b>Chọn Thí Sinh:</b></label>
+        <select id="singerSelect">
+            <option value="">-- Đang tải danh sách... --</option>
+        </select>
+
+        <label><b>Điểm Số (0 - 10):</b></label>
+        <input type="number" id="scoreInput" min="0" max="10" step="0.1" placeholder="Nhập điểm...">
+
+        <button onclick="submitVote()">Gửi Kết Quả 🚀</button>
+        <p id="message" style="margin-top: 10px; font-weight: bold;"></p>
+    </div>
+</div>
+
+<script>
+    const API_URL = "/api";
+    
+    // 1. Logic Quản lý Tên Giám Khảo
+    function checkLogin() {
+        const savedName = localStorage.getItem("judge_name");
+        if (savedName) {
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("voteSection").classList.remove("hidden");
+            document.getElementById("displayJudgeName").innerText = savedName;
+            loadParticipants(); // Tải danh sách thí sinh ngay khi vào
+        } else {
+            document.getElementById("loginSection").classList.remove("hidden");
+            document.getElementById("voteSection").classList.add("hidden");
+        }
+    }
+
+    function saveJudge() {
+        const rawName = document.getElementById("judgeNameInput").value.trim();
+        if (!rawName) return alert("Vui lòng nhập tên!");
+        
+        // Tạo mã ngẫu nhiên 4 ký tự để tránh trùng
+        const randomCode = Math.floor(1000 + Math.random() * 9000); 
+        const fullName = `${rawName}_#${randomCode}`;
+        
+        localStorage.setItem("judge_name", fullName);
+        checkLogin();
+    }
+
+    function logout() {
+        localStorage.removeItem("judge_name");
+        location.reload();
+    }
+
+    // 2. Logic Gọi API
+    async function loadParticipants() {
+        try {
+            const res = await fetch(`${API_URL}/participants`);
+            const data = await res.json();
+            const select = document.getElementById("singerSelect");
+            select.innerHTML = '<option value="">-- Chọn thí sinh --</option>';
+            data.forEach(p => {
+                const option = document.createElement("option");
+                option.value = p.id;
+                option.text = p.name;
+                select.add(option);
+            });
+        } catch (e) {
+            console.error(e);
+            alert("Không kết nối được với Server! Hãy kiểm tra file main.py");
+        }
+    }
+
+    async function submitVote() {
+        const participantId = document.getElementById("singerSelect").value;
+        const score = parseFloat(document.getElementById("scoreInput").value);
+        const judgeName = localStorage.getItem("judge_name");
+
+        if (!participantId || isNaN(score)) return alert("Vui lòng chọn thí sinh và nhập điểm!");
+        if (score < 0 || score > 10) return alert("Điểm phải từ 0 đến 10");
+
+        const res = await fetch(`${API_URL}/vote`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ participant_id: participantId, judge_name: judgeName, score: score })
+        });
+
+        if (res.ok) {
+        const msgBox = document.getElementById("message");
+        
+        // 1. Hiện thông báo
+        msgBox.innerText = "✅ Đã chấm xong! Tiếp tục nào.";
+        msgBox.style.color = "green";
+
+        // 2. Xóa điểm trong ô nhập để tránh nhầm lẫn cho người sau
+        document.getElementById("scoreInput").value = "";
+
+        // 3. Đợi 2 giây (2000ms) rồi tắt thông báo
+        setTimeout(() => {
+            msgBox.innerText = "";
+        }, 2000);
+
+    } else {
+        const msgBox = document.getElementById("message");
+        msgBox.innerText = "❌ Lỗi khi chấm điểm.";
+        msgBox.style.color = "red";
+        
+        // Cũng tự tắt thông báo lỗi sau 3 giây cho gọn
+        setTimeout(() => {
+            msgBox.innerText = "";
+        }, 3000);
+    }
+    }
+
+    // Chạy khi mở web
+    checkLogin();
+</script>
+
+</body>
+</html>

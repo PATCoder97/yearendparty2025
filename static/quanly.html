@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Thí Sinh 🧧</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #b71c1c; color: #fff; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff3e0; color: #333; padding: 20px; border-radius: 15px; border: 4px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        h1 { color: #d50000; text-transform: uppercase; margin-bottom: 5px; }
+        .sub-text { font-style: italic; color: #e65100; margin-bottom: 20px; }
+        
+        /* Form thêm */
+        .add-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex-grow: 1; padding: 12px; border-radius: 8px; border: 2px solid #ffb300; font-size: 16px; outline: none; }
+        button.add-btn { padding: 12px 20px; background-color: #d50000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; white-space: nowrap;}
+        button.add-btn:hover { background-color: #ffd700; color: #d50000; }
+
+        /* Danh sách */
+        ul { list-style: none; padding: 0; text-align: left; }
+        li { background: white; padding: 15px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        li:first-child { border-top-left-radius: 10px; border-top-right-radius: 10px; }
+        li:last-child { border-bottom: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+        li:hover { background-color: #fffde7; }
+        
+        .p-name { font-weight: bold; font-size: 18px; color: #333; }
+        .del-btn { background-color: #ffcdd2; color: #c62828; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .del-btn:hover { background-color: #d50000; color: white; }
+
+        .empty-msg { text-align: center; color: #777; font-style: italic; }
+        .back-link { display: inline-block; margin-top: 20px; color: #ffd700; text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ban Tổ Chức 🌸</h1>
+    <div class="sub-text">Thêm hoặc Xóa thí sinh dự thi</div>
+
+    <div class="add-group">
+        <input type="text" id="newName" placeholder="Nhập tên thí sinh mới..." onkeypress="handleEnter(event)">
+        <button class="add-btn" onclick="addParticipant()">Thêm Ngay ➕</button>
+    </div>
+
+    <ul id="participantList">
+        <div class="empty-msg">Đang tải danh sách...</div>
+    </ul>
+</div>
+
+<a href="/" class="back-link">⬅ Quay lại Chấm Điểm</a> | 
+<a href="/rank" class="back-link">Xem Xếp Hạng ➡</a>
+
+<script>
+    const API_URL = "/api";
+
+    // 1. Tải danh sách
+    async function loadList() {
+        try {
+            const res = await fetch(`${API_URL}/participants`);
+            const data = await res.json();
+            render(data);
+        } catch (e) {
+            console.error(e);
+            alert("Lỗi kết nối Server!");
+        }
+    }
+
+    function render(data) {
+        const list = document.getElementById("participantList");
+        list.innerHTML = "";
+
+        if (data.length === 0) {
+            list.innerHTML = "<div class='empty-msg'>Chưa có thí sinh nào. Hãy thêm mới! 🎤</div>";
+            return;
+        }
+
+        data.forEach(p => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span class="p-name">🎵 ${p.name}</span>
+                <button class="del-btn" onclick="deleteParticipant('${p.id}', '${p.name}')">Xóa 🗑️</button>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    // 2. Thêm thí sinh
+    async function addParticipant() {
+        const input = document.getElementById("newName");
+        const name = input.value.trim();
+        if (!name) return alert("Vui lòng nhập tên!");
+
+        try {
+            const res = await fetch(`${API_URL}/participants`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name })
+            });
+
+            if (res.ok) {
+                input.value = ""; // Xóa ô nhập
+                loadList(); // Tải lại danh sách
+                input.focus();
+            }
+        } catch (e) {
+            alert("Lỗi khi thêm!");
+        }
+    }
+
+    // 3. Xóa thí sinh
+    async function deleteParticipant(id, name) {
+        if (!confirm(`Bạn có chắc muốn xóa thí sinh "${name}" không?\n(Điểm số của người này cũng sẽ mất hết!)`)) return;
+
+        try {
+            const res = await fetch(`${API_URL}/participants/${id}`, {
+                method: "DELETE"
+            });
+            if (res.ok) loadList();
+        } catch (e) {
+            alert("Lỗi khi xóa!");
+        }
+    }
+
+    // Xử lý nút Enter khi nhập
+    function handleEnter(e) {
+        if (e.key === "Enter") addParticipant();
+    }
+
+    // Chạy khi mở trang
+    loadList();
+</script>
+
+</body>
+</html>
