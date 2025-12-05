@@ -20,28 +20,28 @@
 
 <div class="container">
     <div class="tet-deco">🌸 🎤 🌸</div>
-    <h1>Phiếu Chấm Điểm</h1>
+    <h1>Phiếu Chấm Điểm</br>評分表</h1>
 
     <div id="loginSection">
-        <p>Vui lòng nhập tên Giám Khảo để bắt đầu:</p>
+        <p>Vui lòng nhập tên Giám Khảo để bắt đầu</br>請輸入評審姓名以開始</p>
         <input type="text" id="judgeNameInput" placeholder="Tên của bạn (VD: Tài, Hùng...)">
-        <button onclick="saveJudge()">Bắt đầu Chấm 🧧</button>
+        <button onclick="saveJudge()">Bắt đầu Chấm/開始評分 🧧</button>
     </div>
 
     <div id="voteSection" class="hidden">
-        <div>Xin chào: <span id="displayJudgeName" class="judge-badge"></span></div>
-        <button onclick="logout()" style="width: auto; padding: 5px 10px; font-size: 12px; background:#555;">Đổi tên</button>
+        <div>Xin chào/你好: <span id="displayJudgeName" class="judge-badge"></span></div>
+        <button onclick="logout()" style="width: auto; padding: 5px 10px; font-size: 12px; background:#555;">Đổi tên/更換姓名</button>
         <hr style="border-color: #ffb300;">
         
-        <label><b>Chọn Thí Sinh:</b></label>
+        <label><b>Chọn Thí Sinh/選擇參賽者</b></label>
         <select id="singerSelect">
             <option value="">-- Đang tải danh sách... --</option>
         </select>
 
-        <label><b>Điểm Số (0 - 10):</b></label>
-        <input type="number" id="scoreInput" min="0" max="10" step="0.1" placeholder="Nhập điểm...">
+        <label><b>Điểm Số /分數 (0 - 10)</b></label>
+        <input type="number" id="scoreInput" min="0" max="10" step="0.1" placeholder="Nhập điểm/輸入分數...">
 
-        <button onclick="submitVote()">Gửi Kết Quả 🚀</button>
+        <button onclick="submitVote()">Gửi Kết Quả/送出結果 🚀</button>
         <p id="message" style="margin-top: 10px; font-weight: bold;"></p>
     </div>
 </div>
@@ -117,7 +117,7 @@
         const msgBox = document.getElementById("message");
         
         // 1. Hiện thông báo
-        msgBox.innerText = "✅ Đã chấm xong! Tiếp tục nào.";
+        msgBox.innerText = "✅ Đã chấm xong! Tiếp tục nào.</br>評分完成！繼續下一位。";
         msgBox.style.color = "green";
 
         // 2. Xóa điểm trong ô nhập để tránh nhầm lẫn cho người sau
