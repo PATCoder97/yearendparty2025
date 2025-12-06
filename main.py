@@ -100,8 +100,8 @@ def vote_participant(vote: VoteSubmission):
     if vote.participant_id not in participants_db:
         raise HTTPException(status_code=404, detail="Không tìm thấy thí sinh")
     
-    # Kiểm tra điểm hợp lệ (ví dụ: 0 đến 10)
-    if not (0 <= vote.score <= 10):
+    # Kiểm tra điểm hợp lệ (ví dụ: 0 đến 100)
+    if not (0 <= vote.score <= 100):
         raise HTTPException(status_code=400, detail="Điểm số phải từ 0 đến 10")
 
     # Lưu điểm. Cấu trúc dictionary giúp tự động ghi đè nếu key (judge_name) đã tồn tại
