@@ -1,10 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Optional
 import uuid
 from fastapi.staticfiles import StaticFiles 
-from fastapi.responses import FileResponse  
+from fastapi.responses import FileResponse
+import random
+import io
+from openpyxl import load_workbook  
 
 app = FastAPI(title="API Chấm Điểm Cuộc Thi Ca Hát")
 
@@ -53,6 +56,13 @@ participants_db: Dict[str, Participant] = {}
 # Lưu điểm số: { "participant_id": { "judge_name": score } }
 # Ví dụ: { "id1": { "Tai": 9.5, "Hung": 8.0 } }
 scores_db: Dict[str, Dict[str, float]] = {}
+
+# --- DỮ LIỆU CHO BỐC THĂM ---
+# Danh sách người bốc thăm: [ {"deptId": "...", "name": "..."}, ...]
+lottery_candidates: List[Dict[str, str]] = []
+
+# Danh sách người đã trúng thưởng (để hiện ra lần lượt)
+lottery_winners: List[Dict[str, str]] = []
 
 
 # --- CÁC API ENDPOINTS ---
@@ -157,6 +167,90 @@ def get_participant_details(participant_id: str):
     
     return details
 
+# --- CÁC API ENDPOINTS CHO BỐC THĂM ---
+
+@app.post("/api/lottery/upload")
+async def upload_lottery_file(file: UploadFile = File(...)):
+    """Upload file Excel chứa danh sách bốc thăm (2 cột: deptId, name)."""
+    try:
+        # Đọc file Excel
+        contents = await file.read()
+        workbook = load_workbook(io.BytesIO(contents))
+        worksheet = workbook.active
+        
+        candidates = []
+        # Duyệt qua các hàng (bỏ qua header ở hàng 1)
+        for row in worksheet.iter_rows(min_row=2, values_only=True):
+            if row[0] and row[1]:  # Chỉ lấy nếu cả 2 cột không rỗng
+                dept_id = str(row[0]).strip()
+                name = str(row[1]).strip()
+                candidates.append({
+                    "deptId": dept_id,
+                    "name": name,
+                    "fullName": f"{dept_id} - {name}"
+                })
+        
+        # Lưu vào database
+        global lottery_candidates, lottery_winners
+        lottery_candidates = candidates
+        lottery_winners = []
+        
+        return {
+            "message": f"Đã tải lên {len(candidates)} người tham gia bốc thăm",
+            "count": len(candidates)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Lỗi đọc file: {str(e)}")
+
+@app.get("/api/lottery/candidates")
+def get_lottery_candidates():
+    """Lấy danh sách người chưa bốc thăm."""
+    return {
+        "candidates": lottery_candidates,
+        "count": len(lottery_candidates)
+    }
+
+@app.post("/api/lottery/draw")
+def draw_lottery(num_winners: int = 1):
+    """Bốc thăm ngẫu nhiên số người được chỉ định."""
+    global lottery_candidates, lottery_winners
+    
+    if len(lottery_candidates) == 0:
+        raise HTTPException(status_code=400, detail="Danh sách bốc thăm trống")
+    
+    if num_winners > len(lottery_candidates):
+        raise HTTPException(status_code=400, detail=f"Chỉ còn {len(lottery_candidates)} người, không thể bốc {num_winners}")
+    
+    # Bốc ngẫu nhiên
+    winners = random.sample(lottery_candidates, num_winners)
+    
+    # Thêm vào danh sách người trúng
+    lottery_winners.extend(winners)
+    
+    # Xóa khỏi danh sách còn lại
+    lottery_candidates = [c for c in lottery_candidates if c not in winners]
+    
+    return {
+        "winners": winners,
+        "remaining": len(lottery_candidates)
+    }
+
+@app.get("/api/lottery/winners")
+def get_lottery_winners():
+    """Lấy danh sách những người đã trúng."""
+    return {
+        "winners": lottery_winners,
+        "count": len(lottery_winners)
+    }
+
+@app.post("/api/lottery/reset")
+def reset_lottery():
+    """Reset danh sách bốc thăm."""
+    global lottery_candidates, lottery_winners
+    lottery_candidates = []
+    lottery_winners = []
+    return {"message": "Đã xóa danh sách bốc thăm"}
+
 # --- CẤU HÌNH PHỤC VỤ STATIC FILES ---
 
 # 1. Mount thư mục static để truy cập file (ví dụ: /static/style.css nếu có)
@@ -181,3 +275,8 @@ async def read_admin():
 @app.get("/banner")
 async def get_banner():
     return FileResponse('static/image/yep2025.jpg')
+
+# 6. Tạo đường dẫn /lottery để bốc thăm
+@app.get("/lottery")
+async def read_lottery():
+    return FileResponse('static/lottery.html')
