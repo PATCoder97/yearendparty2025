@@ -1092,12 +1092,12 @@
 
             // Hiển thị từng người với delay
             winners.forEach((winner, idx) => {
-                const delay = (idx * 1000) + 300;
+                const delay = (idx * 3000) + 300;
                 setTimeout(() => {
                     const div = document.createElement('div');
                     div.className = 'winner-reveal';
                     div.innerHTML = `
-                        <div class="winner-rank">🥇 Người thứ ${idx + 1}</div>
+                        <div class="winner-rank">🥇 Người thứ ${idx + 1} 🥇第${idx + 1}位</div>
                         <div class="winner-info">
                             <div class="winner-name">${winner.fullName || winner.name}</div>
                         </div>
