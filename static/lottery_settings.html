@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài Đặt Bốc Thăm 🎁</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #b71c1c 0%, #d50000 50%, #8b0000 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header .sub-title {
+            font-size: 1.1em;
+            color: #ffd700;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #d50000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateX(-5px);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            color: #333;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .container h2 {
+            color: #d50000;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d50000;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffb300;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333;
+            background: #fff9c4;
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"]:focus {
+            outline: none;
+            border-color: #d50000;
+            background: #fffde7;
+            box-shadow: 0 0 5px rgba(213, 0, 0, 0.3);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 152, 0, 0.4);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #f44336, #e53935);
+            color: white;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: none;
+        }
+
+        #message.success {
+            background: #4caf50;
+            color: white;
+            display: block;
+        }
+
+        #message.error {
+            background: #f44336;
+            color: white;
+            display: block;
+        }
+
+        #message.info {
+            background: #2196f3;
+            color: white;
+            display: block;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 30px;
+            color: #1565c0;
+            font-size: 0.95em;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/lottery" class="back-btn">← Quay Lại</a>
+
+    <div class="header">
+        <h1>⚙️ Cài Đặt Bốc Thăm</h1>
+        <p class="sub-title">Quản lý danh sách và thiết lập</p>
+    </div>
+
+    <div class="container">
+        <h2>📁 Upload Danh Sách</h2>
+
+        <div class="form-group">
+            <label for="excelFile">Chọn file Excel:</label>
+            <input type="file" id="excelFile" accept=".xlsx,.xls" />
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-upload" onclick="uploadFile()">📤 Tải Lên</button>
+            <button class="btn btn-reset" onclick="resetLottery()">🗑️ Xóa Danh Sách</button>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="info-box">
+            <strong>📋 Yêu cầu định dạng file Excel:</strong>
+            <ul>
+                <li><strong>Cột A:</strong> Mã nhân viên (deptId)</li>
+                <li><strong>Cột B:</strong> Tên nhân viên (name)</li>
+                <li><strong>Dòng 1:</strong> Tiêu đề (deptId, name)</li>
+                <li><strong>Dòng 2 trở đi:</strong> Dữ liệu nhân viên</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "/api/lottery";
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = type;
+            if (type !== '') {
+                setTimeout(() => {
+                    msg.className = '';
+                    msg.textContent = '';
+                }, 4000);
+            }
+        }
+
+        function uploadFile() {
+            const fileInput = document.getElementById('excelFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showMessage('❌ Vui lòng chọn file Excel', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            showMessage('⏳ Đang tải lên...', 'info');
+
+            fetch(`${API_URL}/upload`, {
+                method: 'POST',
+                body: formData
+            })
+                .then(r => {
+                    if (!r.ok) {
+                        return r.text().then(text => {
+                            throw new Error(`HTTP ${r.status}: ${text}`);
+                        });
+                    }
+                    return r.json();
+                })
+                .then(data => {
+                    showMessage(`✅ ${data.message}`, 'success');
+                    fileInput.value = '';
+                    setTimeout(() => {
+                        window.location.href = '/lottery';
+                    }, 1500);
+                })
+                .catch(err => {
+                    console.error('Upload error:', err);
+                    showMessage(`❌ ${err.message}`, 'error');
+                });
+        }
+
+        function resetLottery() {
+            if (!confirm('⚠️ Bạn chắc chắn muốn xóa HẾT danh sách bốc thăm? Hành động này không thể hoàn tác!')) {
+                return;
+            }
+
+            showMessage('⏳ Đang xóa...', 'info');
+
+            fetch(`${API_URL}/reset`, {
+                method: 'POST'
+            })
+                .then(r => r.json())
+                .then(data => {
+                    showMessage(`✅ ${data.message}`, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/lottery';
+                    }, 1500);
+                })
+                .catch(err => {
+                    console.error('Reset error:', err);
+                    showMessage(`❌ Lỗi: ${err.message}`, 'error');
+                });
+        }
+    </script>
+</body>
+</html>

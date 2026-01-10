@@ -15,78 +15,122 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #b71c1c 0%, #d50000 50%, #8b0000 100%);
             color: #fff;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2em;
+            margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
         .header .sub-title {
-            font-size: 1.2em;
+            font-size: 1em;
             color: #ffd700;
         }
 
         .container {
             display: grid;
-            grid-template-columns: 250px 1fr 1fr;
-            gap: 20px;
-            max-width: 1400px;
+            grid-template-columns: 320px 1fr 320px;
+            gap: 10px;
+            max-width: 100%;
             margin: 0 auto;
+            padding: 10px;
+            height: calc(100vh - 140px);
         }
 
-        /* --- SIDEBAR TRÁI: DANH SÁCH CHƯA BỐC --- */
+        /* --- SIDEBAR TRÁI: DANH SÁCH TRÚNG THƯỞNG --- */
         .sidebar-left {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             color: #333;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sidebar-right {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            color: #333;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
         }
 
         .sidebar-left h3 {
             color: #d50000;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-bottom: 3px solid #ffd700;
-            padding-bottom: 10px;
-            font-size: 1.1em;
+            padding-bottom: 8px;
+            font-size: 1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-btn-sidebar {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            padding: 0;
+        }
+
+        .history-btn-sidebar:hover {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            transform: scale(1.1);
         }
 
         .candidate-count {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .count-number {
-            font-size: 2.5em;
+            font-size: 1.8em;
             color: #d50000;
             font-weight: bold;
         }
 
         .count-label {
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
         .candidate-list {
-            max-height: 600px;
+            flex: 1;
+            height: 100%;
             overflow-y: auto;
             border: 2px solid #ffb300;
             border-radius: 10px;
             padding: 10px;
+            margin-bottom: 12px;
+            background: #fafafa;
         }
 
         .candidate-item {
@@ -113,23 +157,40 @@
             border-radius: 4px;
         }
 
-        /* --- PHẦN GIỮA: UPLOAD & ĐIỀU KHIỂN --- */
+        /* --- PHẦN CÀI ĐẶT (DƯỚI DANH SÁCH) --- */
+        .settings-section {
+            border-top: 2px solid #ffb300;
+            padding-top: 15px;
+        }
+
+        .settings-section h4 {
+            color: #d50000;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        /* --- PHẦN PHẢI: CHỌN SỐ VÀ NÚT BỐC THĂM --- */
         .control-panel {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            padding: 30px;
+            padding: 30px 20px;
             color: #333;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .control-panel h2 {
-            color: #d50000;
-            margin-bottom: 20px;
-            text-align: center;
-            border-bottom: 3px solid #ffb300;
-            padding-bottom: 10px;
+            display: none;
+        }
+
+        #message {
+            width: 100%;
         }
 
         .form-group {
@@ -167,7 +228,7 @@
         .button-group {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            width: 100%;
         }
 
         .button-group button {
@@ -210,32 +271,79 @@
             transform: translateY(-2px);
         }
 
-        .btn-draw {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #d50000, #ff1744);
+        .btn-history {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
             color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
+        }
+
+        .btn-history:hover {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            transform: translateY(-2px);
+        }
+
+        /* --- NÚT BỐC THĂM TO TO --- */
+        .draw-section {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .draw-guide {
+            font-size: 1.1em;
             font-weight: bold;
+            color: #d50000;
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 300px;
+            height: 300px;
             cursor: pointer;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 6px 20px rgba(213, 0, 0, 0.4);
-            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .btn-draw:hover:not(:disabled) {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 8px 25px rgba(213, 0, 0, 0.6);
+        .spinner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .btn-draw:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .spinner:hover {
+            transform: scale(1.08);
+            filter: brightness(1.1);
+        }
+
+        .draw-section label {
+            color: #d50000;
+            font-weight: bold;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+
+        .draw-section input {
+            width: 80px;
+            padding: 8px;
+            border: 3px solid #ffb300;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: bold;
+            color: #d50000;
+            background: #fff9c4;
+            text-align: center;
         }
 
         .message {
@@ -387,19 +495,21 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-            border: 4px solid #d50000;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            min-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 5px solid #d50000;
+            border-radius: 25px;
+            padding: 0;
+            max-width: 600px;
+            max-height: 85vh;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
             animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            flex-direction: column;
         }
 
         @keyframes popIn {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
+                transform: translate(-50%, -50%) scale(0.3);
             }
             100% {
                 opacity: 1;
@@ -407,44 +517,275 @@
             }
         }
 
-        .modal-content .trophy {
-            font-size: 4em;
-            margin-bottom: 20px;
+        .modal-header {
+            background: linear-gradient(135deg, #d50000, #ff1744);
+            color: white;
+            padding: 30px 30px 20px 30px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header .trophy {
+            font-size: 2.5em;
             animation: bounce 1s infinite;
         }
 
         @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .modal-content h1 {
+        .modal-header h1 {
+            color: white;
+            font-size: 1.8em;
+            margin: 0;
+            flex: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-close {
+            background: white;
             color: #d50000;
-            font-size: 2em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-content .winner-name-large {
-            font-size: 2.5em;
-            color: #ff6f00;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
             font-weight: bold;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .modal-content .dept-id {
+        .modal-close:hover {
+            background: #ffb300;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 20px 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .winners-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .winner-reveal {
+            background: white;
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            padding: 20px;
+            opacity: 0;
+            animation: revealWinner 0.6s ease-out forwards;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes revealWinner {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .winner-rank {
             font-size: 1.1em;
-            color: #666;
-            margin-bottom: 20px;
+            color: #d50000;
+            font-weight: bold;
+            margin-bottom: 8px;
         }
 
-        .close-modal {
-            display: none;
+        .winner-info {
+            text-align: left;
+        }
+
+        .winner-name {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+            word-break: break-word;
+            margin-bottom: 5px;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #ffb300;
+            border-radius: 4px;
+        }
+
+        /* --- MODAL LỊCH SỬ --- */
+        #historyModal {
+            z-index: 999;
+        }
+
+        .history-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid #2196f3;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 500px;
+            max-height: 80vh;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-header {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-header h2 {
+            font-size: 1.5em;
+            margin: 0;
+            flex: 1;
+        }
+
+        .history-body {
+            padding: 20px 25px;
+            overflow-y: auto;
+            flex: 1;
+            color: #333;
+        }
+
+        .history-item {
+            background: #f5f5f5;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .history-item-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .history-item-dept {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #999;
+            padding: 30px 20px;
+            font-size: 1.1em;
+        }
+
+        /* --- MODAL XÁC NHẬN --- */
+        #confirmModal {
+            z-index: 2000;
+        }
+
+        .confirm-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 5px solid #d50000;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 450px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-align: center;
+        }
+
+        .confirm-modal-content h2 {
+            color: #d50000;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirm-modal-content p {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .confirm-buttons button {
+            padding: 12px 35px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            line-height: 1.4;
+            min-width: 130px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #ff1744 0%, #d50000 100%);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(213, 0, 0, 0.5);
+        }
+
+        .btn-confirm:active {
+            transform: translateY(0px);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #a0a0a0 0%, #808080 100%);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+        }
+
+        .btn-cancel:active {
+            transform: translateY(0px);
         }
 
         /* Responsive */
@@ -456,10 +797,15 @@
 
             .sidebar-left {
                 position: static;
+                max-height: none;
             }
 
             .modal-content {
-                min-width: 90vw;
+                max-width: 90vw;
+            }
+
+            .history-modal-content {
+                max-width: 85vw;
             }
         }
 
@@ -469,90 +815,118 @@
             }
 
             .modal-content {
-                min-width: 85vw;
-                padding: 30px 20px;
+                max-width: 85vw;
             }
 
-            .modal-content .winner-name-large {
-                font-size: 1.8em;
+            .btn-draw {
+                font-size: 1.1em;
+                padding: 15px 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🎁 Bốc Thăm Trúng Thưởng 🎁</h1>
-        <p class="sub-title">🌸 Chúc mừng năm mới! 🌸</p>
+        <h1>🎁 Bốc Thăm Trúng Thưởng 抽獎🎁</h1>
+        <p class="sub-title">🌸 Chúc mừng năm mới 新年快樂！🌸</p>
     </div>
 
     <div class="container">
         <!-- SIDEBAR TRÁI: DANH SÁCH CHƯA BỐC -->
         <div class="sidebar-left">
-            <h3>📋 Danh Sách</h3>
+            <h3>
+                <span>📋 Danh Sách 清單</span>
+                <button class="history-btn-sidebar" onclick="showHistory()" title="Xem lịch sử">📜</button>
+            </h3>
             <div class="candidate-count">
                 <div class="count-number" id="candidateCount">0</div>
-                <div class="count-label">Người còn lại</div>
+                <div class="count-label">Người còn lại 剩下的人</div>
             </div>
             <div class="candidate-list" id="candidateList">
-                <p style="text-align: center; color: #999;">Chưa có dữ liệu</p>
+                <p style="text-align: center; color: #999; font-size: 0.9em;">Chưa có dữ liệu</p>
             </div>
+
+            <a href="/lottery/settings" style="text-decoration: none; width: 100%;">
+                <button style="width: 100%; background: linear-gradient(135deg, #666, #555); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; transition: all 0.3s;">
+                    ⚙️ Cài Đặt
+                </button>
+            </a>
         </div>
 
-        <!-- PHẦN GIỮA: UPLOAD & ĐIỀU KHIỂN -->
+        <!-- PHẦN PHẢI: CHỌN SỐ VÀ NÚT BỐC THĂM -->
         <div class="control-panel">
-            <h2>⚙️ Điều Khiển</h2>
-
-            <div id="message" class="message"></div>
-
-            <div class="form-group">
-                <label for="excelFile">📁 Upload file Excel:</label>
-                <input type="file" id="excelFile" accept=".xlsx,.xls" />
-            </div>
-
-            <div class="button-group">
-                <button class="btn-upload" onclick="uploadFile()">📤 Tải Lên</button>
-                <button class="btn-reset" onclick="resetLottery()">🔄 Reset</button>
-            </div>
-
-            <div class="form-group">
-                <label for="numWinners">🎯 Số người bốc thăm:</label>
-                <input type="number" id="numWinners" min="1" value="1" />
-            </div>
-
-            <button class="btn-draw" onclick="drawLottery()" id="drawBtn">
-                ✨ BỐC THĂM ✨
-            </button>
-
-            <p style="text-align: center; color: #666; margin-top: 20px; font-size: 0.9em;">
-                Mỗi lần bốc thăm sẽ xóa người đó khỏi danh sách
-            </p>
-        </div>
-
-        <!-- PHẦN PHẢI: DANH SÁCH TRÚNG THƯỞNG -->
-        <div class="winner-panel">
-            <h2>🏆 Người Trúng Thưởng</h2>
-            <div class="winner-list" id="winnerList">
-                <div class="empty-state">
-                    <div class="icon">🎪</div>
-                    <p>Chưa có người trúng thưởng</p>
+            <div class="draw-section">
+                <div class="draw-guide">Bấm vào lì xì là có thể bốc thăm ngay 點擊紅包即可抽獎</div>
+                
+                <div class="spinner-container">
+                    <div class="spinner" id="spinnerBtn" onclick="drawLottery()">
+                        <img src="/static/image/spin.gif" alt="Spin wheel">
+                    </div>
                 </div>
+
+                <div>
+                    <label for="numWinners">Số suất trúng thưởng 中獎名額</label><br>
+                    <input type="number" id="numWinners" min="1" value="1" />
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-right">
+            <h3>
+                <span>🏆 Người Trúng 得獎者</span>
+            </h3>
+            <div class="candidate-count">
+                <div class="count-number" id="winnerCount">0</div>
+                <div class="count-label">Người đã trúng 得獎者</div>
+            </div>
+            <div class="candidate-list" id="winnerList">
+                <p style="text-align: center; color: #999; font-size: 0.9em;">Chưa có người trúng</p>
             </div>
         </div>
     </div>
 
-    <!-- MODAL POPUP KHI BỐC TRÚNG -->
+    <!-- MODAL POPUP DANH SÁCH TRÚNG THƯỞNG -->
     <div id="winnerModal" class="modal">
         <div class="modal-content">
-            <div class="trophy">🏆</div>
-            <h1>CHÚC MỪNG!</h1>
-            <div class="dept-id" id="modalDeptId"></div>
-            <div class="winner-name-large" id="modalWinnerName"></div>
-            <p style="color: #666; font-size: 1.1em;">Bạn là người may mắn! 🎉</p>
+            <div class="modal-header">
+                <div class="trophy">🏆</div>
+                <h1>CHÚC MỪNG 恭喜中獎！</h1>
+                <button class="modal-close" onclick="closeWinnerModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="winners-container" id="winnersContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LỊCH SỬ BỐC THĂM -->
+    <div id="historyModal" class="modal">
+        <div class="history-modal-content">
+            <div class="history-header">
+                <h2>📜 Lịch Sử Bốc Thăm</h2>
+                <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+            </div>
+            <div class="history-body" id="historyBody">
+                <p class="empty-history">Đang tải...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN BỐC THĂM -->
+    <div id="confirmModal" class="modal">
+        <div class="confirm-modal-content">
+            <h2>🎯 XÁC NHẬN 確認</h2>
+            <p id="confirmMessage">Bốc 1 người trúng thưởng?<br>抽出1位中獎者？</p>
+            <div class="confirm-buttons">
+                <button class="btn-confirm" onclick="confirmDraw()">✓ Xác Nhận<br>確認</button>
+                <button class="btn-cancel" onclick="cancelDraw()">✕ Hủy<br>取消</button>
+            </div>
         </div>
     </div>
 
     <script>
         const API_URL = "/api/lottery";
+        let allWinners = [];
+        let pendingNumWinners = 0;
 
         // Load danh sách khi trang load
         window.addEventListener('DOMContentLoaded', () => {
@@ -563,10 +937,13 @@
         function showMessage(text, type) {
             const msg = document.getElementById('message');
             msg.textContent = text;
-            msg.className = `message ${type}`;
-            setTimeout(() => {
-                msg.className = 'message';
-            }, 3000);
+            msg.className = type;
+            if (type !== '') {
+                setTimeout(() => {
+                    msg.className = '';
+                    msg.textContent = '';
+                }, 4000);
+            }
         }
 
         function uploadFile() {
@@ -581,18 +958,28 @@
             const formData = new FormData();
             formData.append('file', file);
 
+            showMessage('⏳ Đang tải lên...', 'info');
+
             fetch(`${API_URL}/upload`, {
                 method: 'POST',
                 body: formData
             })
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) {
+                        return r.text().then(text => {
+                            throw new Error(`HTTP ${r.status}: ${text}`);
+                        });
+                    }
+                    return r.json();
+                })
                 .then(data => {
                     showMessage(`✅ ${data.message}`, 'success');
                     fileInput.value = '';
                     loadCandidates();
                 })
                 .catch(err => {
-                    showMessage(`❌ Lỗi: ${err.message}`, 'error');
+                    console.error('Upload error:', err);
+                    showMessage(`❌ ${err.message}`, 'error');
                 });
         }
 
@@ -604,7 +991,7 @@
                     document.getElementById('candidateCount').textContent = data.count;
 
                     if (data.count === 0) {
-                        list.innerHTML = '<p style="text-align: center; color: #999;">Chưa có dữ liệu</p>';
+                        list.innerHTML = '<p style="text-align: center; color: #999; font-size: 0.9em;">Chưa có dữ liệu</p>';
                         return;
                     }
 
@@ -619,73 +1006,145 @@
                 .then(r => r.json())
                 .then(data => {
                     const list = document.getElementById('winnerList');
+                    const count = data.winners ? data.winners.length : 0;
+                    document.getElementById('winnerCount').textContent = count;
+                    allWinners = data.winners || [];
 
-                    if (data.count === 0) {
-                        list.innerHTML = '<div class="empty-state"><div class="icon">🎪</div><p>Chưa có người trúng thưởng</p></div>';
+                    if (count === 0) {
+                        list.innerHTML = '<p style="text-align: center; color: #999; font-size: 0.9em;">Chưa có người trúng</p>';
                         return;
                     }
 
                     list.innerHTML = data.winners.map((w, idx) =>
-                        `<div class="winner-item">
-                            <div class="winner-number">#${idx + 1}</div>
-                            <div class="winner-name">${w.fullName}</div>
-                            <div class="winner-badge">🎁</div>
+                        `<div class="candidate-item" style="background: linear-gradient(90deg, #ffe0b2, #ffd700); color: #e65100; border-left-color: #d50000;">
+                            <strong>#${idx + 1}</strong> - ${w.fullName || w.name}
                         </div>`
                     ).join('');
+
+                    // Scroll to bottom to show newest winner
+                    list.scrollTop = list.scrollHeight;
                 });
         }
 
         function drawLottery() {
             const numWinners = parseInt(document.getElementById('numWinners').value);
-            const drawBtn = document.getElementById('drawBtn');
 
             if (numWinners < 1) {
                 showMessage('❌ Số người phải >= 1', 'error');
                 return;
             }
 
-            drawBtn.disabled = true;
+            // Lưu số người để confirmDraw() sử dụng
+            pendingNumWinners = numWinners;
+            
+            // Hiển thị modal xác nhận
+            const confirmModal = document.getElementById('confirmModal');
+            document.getElementById('confirmMessage').innerHTML = `Bốc ${numWinners} người trúng thưởng?<br>抽出${numWinners}位中獎者？`;
+            confirmModal.style.display = 'block';
+        }
 
-            fetch(`${API_URL}/draw?num_winners=${numWinners}`, {
+        function confirmDraw() {
+            const spinnerBtn = document.getElementById('spinnerBtn');
+            const confirmModal = document.getElementById('confirmModal');
+            
+            confirmModal.style.display = 'none';
+            spinnerBtn.disabled = true;
+            spinnerBtn.style.opacity = '0.6';
+
+            fetch(`${API_URL}/draw?num_winners=${pendingNumWinners}`, {
                 method: 'POST'
             })
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) {
+                        return r.json().then(data => {
+                            throw new Error(data.detail || `HTTP ${r.status}`);
+                        });
+                    }
+                    return r.json();
+                })
                 .then(data => {
                     if (data.winners && data.winners.length > 0) {
-                        // Hiện popup lần lượt với delay
-                        showWinnersSequentially(data.winners);
+                        showWinnersModal(data.winners);
                         loadCandidates();
-                        loadWinners();
                     }
-                    drawBtn.disabled = false;
+                    spinnerBtn.style.opacity = '1';
+                    spinnerBtn.disabled = false;
                 })
                 .catch(err => {
-                    showMessage(`❌ Lỗi: ${err.message}`, 'error');
-                    drawBtn.disabled = false;
+                    console.error('Draw error:', err);
+                    showMessage(`❌ ${err.message}`, 'error');
+                    spinnerBtn.style.opacity = '1';
+                    spinnerBtn.disabled = false;
                 });
         }
 
-        function showWinnersSequentially(winners) {
-            let delay = 0;
+        function cancelDraw() {
+            document.getElementById('confirmModal').style.display = 'none';
+            pendingNumWinners = 0;
+        }
+
+        function showWinnersModal(winners) {
+            const modal = document.getElementById('winnerModal');
+            const container = document.getElementById('winnersContainer');
+            
+            container.innerHTML = '';
+            modal.style.display = 'block';
+
+            // Hiển thị từng người với delay
             winners.forEach((winner, idx) => {
-                delay += Math.random() * 1000 + 500; // Delay 0.5-1.5s random
+                const delay = (idx * 1000) + 300;
                 setTimeout(() => {
-                    showWinnerModal(winner);
+                    const div = document.createElement('div');
+                    div.className = 'winner-reveal';
+                    div.innerHTML = `
+                        <div class="winner-rank">🥇 Người thứ ${idx + 1}</div>
+                        <div class="winner-info">
+                            <div class="winner-name">${winner.fullName || winner.name}</div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                    
+                    // Auto scroll to focus on newest winner
+                    div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, delay);
             });
         }
 
-        function showWinnerModal(winner) {
-            const modal = document.getElementById('winnerModal');
-            document.getElementById('modalDeptId').textContent = winner.deptId;
-            document.getElementById('modalWinnerName').textContent = winner.name;
+        function closeWinnerModal() {
+            document.getElementById('winnerModal').style.display = 'none';
+            // Update winners list sau khi đóng modal
+            loadWinners();
+        }
 
+        function showHistory() {
+            const modal = document.getElementById('historyModal');
+            const body = document.getElementById('historyBody');
+            
             modal.style.display = 'block';
+            body.innerHTML = '<p class="empty-history">Đang tải...</p>';
 
-            // Tự động đóng sau 3 giây
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 3000);
+            fetch(`${API_URL}/winners`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.winners || data.winners.length === 0) {
+                        body.innerHTML = '<p class="empty-history">📭 Chưa có lịch sử bốc thăm</p>';
+                        return;
+                    }
+
+                    body.innerHTML = data.winners.map((w, idx) => `
+                        <div class="history-item">
+                            <div class="history-item-name">🏆 #${idx + 1} - ${w.fullName || w.name}</div>
+                        </div>
+                    `).join('');
+                })
+                .catch(err => {
+                    console.error('History error:', err);
+                    body.innerHTML = '<p class="empty-history">❌ Lỗi tải lịch sử</p>';
+                });
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
         }
 
         function resetLottery() {
@@ -699,6 +1158,7 @@
                 .then(r => r.json())
                 .then(data => {
                     showMessage(`✅ ${data.message}`, 'success');
+                    allWinners = [];
                     loadCandidates();
                     loadWinners();
                 })
@@ -709,9 +1169,18 @@
 
         // Đóng modal khi click ngoài
         window.addEventListener('click', (e) => {
-            const modal = document.getElementById('winnerModal');
-            if (e.target === modal) {
-                modal.style.display = 'none';
+            const winnerModal = document.getElementById('winnerModal');
+            const historyModal = document.getElementById('historyModal');
+            const confirmModal = document.getElementById('confirmModal');
+            
+            if (e.target === winnerModal) {
+                closeWinnerModal();
+            }
+            if (e.target === historyModal) {
+                closeHistoryModal();
+            }
+            if (e.target === confirmModal) {
+                cancelDraw();
             }
         });
     </script>

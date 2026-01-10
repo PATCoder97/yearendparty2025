@@ -168,6 +168,17 @@ def get_participant_details(participant_id: str):
     return details
 
 # --- CÁC API ENDPOINTS CHO BỐC THĂM ---
+def clean_text(text):
+    if not text:
+        return text
+    return (
+        str(text)
+        .replace("_x000D_", " ")
+        .replace("\r", " ")
+        .replace("\n", " ")
+        .strip()
+    )
+
 
 @app.post("/api/lottery/upload")
 async def upload_lottery_file(file: UploadFile = File(...)):
@@ -182,8 +193,9 @@ async def upload_lottery_file(file: UploadFile = File(...)):
         # Duyệt qua các hàng (bỏ qua header ở hàng 1)
         for row in worksheet.iter_rows(min_row=2, values_only=True):
             if row[0] and row[1]:  # Chỉ lấy nếu cả 2 cột không rỗng
-                dept_id = str(row[0]).strip()
-                name = str(row[1]).strip()
+                dept_id = clean_text(row[0])
+                name = clean_text(row[1])
+
                 candidates.append({
                     "deptId": dept_id,
                     "name": name,
@@ -280,3 +292,8 @@ async def get_banner():
 @app.get("/lottery")
 async def read_lottery():
     return FileResponse('static/lottery.html')
+
+# 7. Tạo đường dẫn /lottery/settings để cài đặt
+@app.get("/lottery/settings")
+async def read_lottery_settings():
+    return FileResponse('static/lottery_settings.html')
