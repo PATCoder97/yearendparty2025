@@ -176,3 +176,8 @@ async def read_rank():
 @app.get("/admin")
 async def read_admin():
     return FileResponse('static/quanly.html')
+
+# 5. Tạo đường dẫn /banner để hiển thị ảnh
+@app.get("/banner")
+async def get_banner():
+    return FileResponse('static/image/yep2025.jpg')
