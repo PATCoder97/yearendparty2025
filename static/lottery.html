@@ -560,11 +560,13 @@
             justify-content: center;
             transition: all 0.3s;
             font-weight: bold;
+            padding: 0;
+            transform-origin: center;
         }
 
         .modal-close:hover {
             background: #ffb300;
-            transform: rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
         }
 
         .modal-body {
@@ -723,6 +725,22 @@
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
             animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             text-align: center;
+            position: relative;
+        }
+
+        .confirm-modal-content .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2em;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .confirm-modal-content h2 {
@@ -914,6 +932,7 @@
     <!-- MODAL XÁC NHẬN BỐC THĂM -->
     <div id="confirmModal" class="modal">
         <div class="confirm-modal-content">
+            <button class="modal-close" onclick="cancelDraw()">✕</button>
             <h2>🎯 XÁC NHẬN 確認</h2>
             <p id="confirmMessage">Bốc 1 người trúng thưởng?<br>抽出1位中獎者？</p>
             <div class="confirm-buttons">

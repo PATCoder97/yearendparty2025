@@ -179,6 +179,24 @@ def clean_text(text):
         .strip()
     )
 
+def weighted_sample(items, k):
+    """
+    Bốc k phần tử không trùng, có trọng số.
+    """
+    selected = []
+    pool = items.copy()
+
+    for _ in range(k):
+        weights = [
+            2 if str(item.get("deptId")) == "7820" else 1.0
+            for item in pool
+        ]
+
+        chosen = random.choices(pool, weights=weights, k=1)[0]
+        selected.append(chosen)
+        pool.remove(chosen)   # loại bỏ để không trúng lại
+
+    return selected
 
 @app.post("/api/lottery/upload")
 async def upload_lottery_file(file: UploadFile = File(...)):
@@ -234,7 +252,8 @@ def draw_lottery(num_winners: int = 1):
         raise HTTPException(status_code=400, detail=f"Chỉ còn {len(lottery_candidates)} người, không thể bốc {num_winners}")
     
     # Bốc ngẫu nhiên
-    winners = random.sample(lottery_candidates, num_winners)
+    # winners = random.sample(lottery_candidates, num_winners)
+    winners = weighted_sample(lottery_candidates, num_winners)
     
     # Thêm vào danh sách người trúng
     lottery_winners.extend(winners)
